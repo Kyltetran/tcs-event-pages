@@ -675,48 +675,28 @@
           <p>Đặt vé trước để tham dự đêm nhạc Trịnh Công Sơn "Về trong vòng tay mẹ"</p>
         </div>
 
-        <div class="row">
-          <div class="col-lg-4">
-            <div class="card mb-5 mb-lg-0">
-              <div class="card-body">
-                <h5 class="card-title text-muted text-uppercase text-center">Vé về trong vòng tay mẹ</h5>
-                <h6 class="card-price text-center">Vô giá</h6>
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6 d-flex justify-content-center">
+            <div class="card mb-5 mb-lg-0" style="width: 100%; max-width: 500px; padding: 30px;">
+              <div class="card-body text-center">
+                <h5 class="card-title text-muted text-uppercase">Vé về trong vòng tay mẹ</h5>
+                <h6 class="card-price">Vô giá</h6>
                 <hr>
-                <ul class="fa-ul">
+                <ul class="fa-ul text-left">
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Nghe nhạc Trịnh</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Ngắm nhạc Trịnh</li>
                   <li><span class="fa-li"><i class="fa fa-check"></i></span>Nghĩ nhạc Trịnh</li>
-                
                 </ul>
                 <hr>
                 <div class="text-center">
-                  <button type="button" class="btn" data-toggle="modal" data-target="#buy-ticket-modal" data-ticket-type="standard-access">Đặt ngay</button>
+                  <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#buy-ticket-modal" data-ticket-type="standard-access"
+                    >Đặt ngay
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="card mb-5 mb-lg-0">
-              <div class="card-body">
-                <h5 class="card-title text-muted text-uppercase text-center">Pro Access</h5>
-                <h6 class="card-price text-center">$250</h6>
-                <hr>
-                <ul class="fa-ul">
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Regular Seating</li>
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Coffee Break</li>
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Custom Badge</li>
-                  <li><span class="fa-li"><i class="fa fa-check"></i></span>Community Access</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Workshop Access</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>After Party</li>
-                </ul>
-                <hr>
-                <div class="text-center">
-                  <button type="button" class="btn" data-toggle="modal" data-target="#buy-ticket-modal" data-ticket-type="pro-access">Buy Now</button>
-                </div>
-              </div>
-            </div>
-          </div>
-       
+        </div>            
 
       <!-- Modal Order Form -->
       <div id="buy-ticket-modal" class="modal fade">
@@ -729,30 +709,33 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="POST" action="#">
+              <form id="ms-form">
                 <div class="form-group">
-                  <input type="text" class="form-control" name="your-name" placeholder="Your Name">
+                  <input type="text" class="form-control" id="last-name" placeholder="Your Last Name" required>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="your-email" placeholder="Your Email">
+                  <input type="text" class="form-control" id="first-name" placeholder="Your First Name" required>
                 </div>
                 <div class="form-group">
-                  <select id="ticket-type" name="ticket-type" class="form-control" >
-                    <option value="">-- Select Your Ticket Type --</option>
-                    <option value="standard-access">Standard Access</option>
-                    <option value="pro-access">Pro Access</option>
-                    <option value="premium-access">Premium Access</option>
-                  </select>
+                  <input type="text" class="form-control" id="phone-number" placeholder="Your Phone Number" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="company" placeholder="Your Company or Organization">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="role" placeholder="Your Current Role or Position">
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn">Buy Now</button>
+                  <button type="submit" class="btn">Submit</button>
                 </div>
               </form>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
-
     </section>
 
 

@@ -142,6 +142,41 @@ jQuery(document).ready(function( $ ) {
     modal.find('#ticket-type').val(ticketType);
   })
 
+  // Fill in the modal and access to microsoft form
+  document.getElementById("ms-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent normal form submission
+
+    // Get form data
+    const lastName = encodeURIComponent(document.getElementById("last-name").value);
+    const firstName = encodeURIComponent(document.getElementById("first-name").value);
+    const phoneNumber = encodeURIComponent(document.getElementById("phone-number").value);
+    const email = encodeURIComponent(document.getElementById("email").value);
+    const company = encodeURIComponent(document.getElementById("company").value);
+    const role = encodeURIComponent(document.getElementById("role").value);
+
+    // Check if required fields are filled
+    if (!lastName || !firstName || !phoneNumber || !email) {
+        alert("Please fill in all required fields (Last Name, First Name, Phone Number, Email).");
+        return;
+    }
+
+    // Microsoft Forms Pre-Filled URL
+    const msFormURL = `https://forms.office.com/r/47B3DWYQLB?tab=2&entry.1=${lastName}&entry.2=${firstName}&entry.3=${phoneNumber}&entry.4=${email}&entry.5=${company}&entry.6=${role}`;
+
+    // Create a hidden iframe to submit the form
+    let iframe = document.createElement("iframe");
+    iframe.style.display = "none"; // Hide the iframe
+    iframe.src = msFormURL; // Load the form with pre-filled values
+    document.body.appendChild(iframe);
+
+    // Wait for the form to load, then simulate submission
+    setTimeout(() => {
+        iframe.contentWindow.document.querySelector("button[type=submit]").click();
+        alert("Your response has been recorded successfully!");
+        document.getElementById("ms-form").reset(); // Clear the form after submission
+    }, 5000); // Wait 5 seconds for the form to load
+  });
+
 // custom code
 
 });
