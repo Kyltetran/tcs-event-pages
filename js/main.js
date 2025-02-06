@@ -145,45 +145,36 @@ jQuery(document).ready(function( $ ) {
   // Fill in the modal and show it in the excel file
   document.getElementById("ms-form").addEventListener("submit", async function(event) {
     event.preventDefault();
-
     const formData = {
-        lastName: document.getElementById("last-name").value,
-        firstName: document.getElementById("first-name").value,
-        phoneNumber: document.getElementById("phone-number").value,
-        email: document.getElementById("email").value,
-        company: document.getElementById("company").value,
-        role: document.getElementById("role").value,
-        tab: "1"
+      lastName: document.getElementById("last-name").value,
+      firstName: document.getElementById("first-name").value,
+      phoneNumber: document.getElementById("phone-number").value,
+      email: document.getElementById("email").value,
+      company: document.getElementById("company").value,
+      role: document.getElementById("role").value
     };
-
-    console.log("🚀 Sending Form Data:", JSON.stringify(formData));
-
+  
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwW0TnQvydZUG5_73RDRsF80G_CncWuBKslKhWBwFdzq_-UM1lVzee4DCC3Oz-W5u0kNg/exec", {
-            method: "POST",
-            mode: "cors",  // ✅ Fixes CORS issues
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        });
-
-        console.log("🔄 Waiting for response...");
-        const result = await response.json();
-        console.log("✅ Response from Google Apps Script:", result);
-
-        if (result.message === "Success") {
-            alert("✅ Your response has been recorded in Google Sheets!");
-            document.getElementById("ms-form").reset();
-        } else if (result.message === "Limit Reached") {
-            alert("⚠️ The form has reached the maximum limit of 40 entries.");
-        } else {
-            alert("❌ Error submitting your response.");
-        }
+      const response = await fetch("https://script.google.com/macros/s/AKfycbzzkedQ1RlvmjXDU4GaAAFLqj1BAFPnRKKnIXUTgt2I_o4YKN2UB1UHybNCn7MtOwyI9A/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+  
+      const result = await response.json();
+      console.log(result);
+  
+      if (result.message === "Success") {
+        alert("Your response has been recorded!");
+        this.reset();
+      } else {
+        alert(result.message);
+      }
     } catch (error) {
-        console.error("❌ Network error:", error);
-        alert("❌ Network error. Please check your connection and try again.");
+      console.error("Error:", error);
+      alert("Failed to submit form");
     }
   });
 
