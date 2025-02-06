@@ -142,41 +142,69 @@ jQuery(document).ready(function( $ ) {
     modal.find('#ticket-type').val(ticketType);
   })
 
-  // Fill in the modal and access to microsoft form
-  document.getElementById("ms-form").addEventListener("submit", function(event) {
+  // Fill in the modal and show it in the excel file
+  document.getElementById("ms-form").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent normal form submission
 
     // Get form data
-    const lastName = encodeURIComponent(document.getElementById("last-name").value);
-    const firstName = encodeURIComponent(document.getElementById("first-name").value);
-    const phoneNumber = encodeURIComponent(document.getElementById("phone-number").value);
-    const email = encodeURIComponent(document.getElementById("email").value);
-    const company = encodeURIComponent(document.getElementById("company").value);
-    const role = encodeURIComponent(document.getElementById("role").value);
+    const lastName = document.getElementById("last-name").value;
+    const firstName = document.getElementById("first-name").value;
+    const phoneNumber = document.getElementById("phone-number").value;
+    const email = document.getElementById("email").value;
+    const company = document.getElementById("company").value;
+    const role = document.getElementById("role").value;
 
-    // Check if required fields are filled
+    // Validate required fields
     if (!lastName || !firstName || !phoneNumber || !email) {
         alert("Please fill in all required fields (Last Name, First Name, Phone Number, Email).");
         return;
     }
 
-    // Microsoft Forms Pre-Filled URL
-    const msFormURL = `https://forms.office.com/r/47B3DWYQLB?tab=2&entry.1=${lastName}&entry.2=${firstName}&entry.3=${phoneNumber}&entry.4=${email}&entry.5=${company}&entry.6=${role}`;
+    try {
+        // Load existing Excel file
+        const response = await fetch("TCS draft excel.xlsx");
+        const arrayBuffer = await response.arrayBuffer();
 
-    // Create a hidden iframe to submit the form
-    let iframe = document.createElement("iframe");
-    iframe.style.display = "none"; // Hide the iframe
-    iframe.src = msFormURL; // Load the form with pre-filled values
-    document.body.appendChild(iframe);
+        // Read Excel file
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const sheetName = workbook.SheetNames[0]; // Get first sheet
+        const worksheet = workbook.Sheets[sheetName];
 
-    // Wait for the form to load, then simulate submission
-    setTimeout(() => {
-        iframe.contentWindow.document.querySelector("button[type=submit]").click();
-        alert("Your response has been recorded successfully!");
-        document.getElementById("ms-form").reset(); // Clear the form after submission
-    }, 5000); // Wait 5 seconds for the form to load
+        // Convert sheet data to JSON
+        let excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Auto-increment index
+        let newIndex = excelData.length;
+        let newEntry = [newIndex, lastName, firstName, phoneNumber, email, company, role];
+
+        // Append new entry
+        excelData.push(newEntry);
+
+        // Convert data back to worksheet
+        const newWorksheet = XLSX.utils.aoa_to_sheet(excelData);
+        workbook.Sheets[sheetName] = newWorksheet;
+
+        // Save updated Excel file
+        const updatedExcel = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const blob = new Blob([updatedExcel], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "TCS_draft_excel.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        alert("Your response has been successfully added to the Excel file!");
+
+        // Clear form fields
+        document.getElementById("ms-form").reset();
+    } catch (error) {
+        console.error("Error updating Excel file:", error);
+        alert("There was an error updating the Excel file.");
+    }
   });
-
 // custom code
 
 });
