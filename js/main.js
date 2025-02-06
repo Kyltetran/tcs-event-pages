@@ -155,7 +155,7 @@ jQuery(document).ready(function( $ ) {
     };
   
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbzzkedQ1RlvmjXDU4GaAAFLqj1BAFPnRKKnIXUTgt2I_o4YKN2UB1UHybNCn7MtOwyI9A/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbyrFcluUsVy-j5m_sB2OcQLahhRFa7GzVu4YHtrOxyVCrjS3L0Kaz6jvPx2tYKwTzLzSw/exec", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
