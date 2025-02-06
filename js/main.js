@@ -144,67 +144,49 @@ jQuery(document).ready(function( $ ) {
 
   // Fill in the modal and show it in the excel file
   document.getElementById("ms-form").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent normal form submission
+    event.preventDefault();
 
-    // Get form data
-    const lastName = document.getElementById("last-name").value;
-    const firstName = document.getElementById("first-name").value;
-    const phoneNumber = document.getElementById("phone-number").value;
-    const email = document.getElementById("email").value;
-    const company = document.getElementById("company").value;
-    const role = document.getElementById("role").value;
+    const formData = {
+        lastName: document.getElementById("last-name").value,
+        firstName: document.getElementById("first-name").value,
+        phoneNumber: document.getElementById("phone-number").value,
+        email: document.getElementById("email").value,
+        company: document.getElementById("company").value,
+        role: document.getElementById("role").value,
+        tab: "1"
+    };
 
-    // Validate required fields
-    if (!lastName || !firstName || !phoneNumber || !email) {
-        alert("Please fill in all required fields (Last Name, First Name, Phone Number, Email).");
-        return;
-    }
+    console.log("🚀 Sending Form Data:", JSON.stringify(formData));
 
     try {
-        // Load existing Excel file
-        const response = await fetch("TCS draft excel.xlsx");
-        const arrayBuffer = await response.arrayBuffer();
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwW0TnQvydZUG5_73RDRsF80G_CncWuBKslKhWBwFdzq_-UM1lVzee4DCC3Oz-W5u0kNg/exec", {
+            method: "POST",
+            mode: "cors",  // ✅ Fixes CORS issues
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        });
 
-        // Read Excel file
-        const workbook = XLSX.read(arrayBuffer, { type: "array" });
-        const sheetName = workbook.SheetNames[0]; // Get first sheet
-        const worksheet = workbook.Sheets[sheetName];
+        console.log("🔄 Waiting for response...");
+        const result = await response.json();
+        console.log("✅ Response from Google Apps Script:", result);
 
-        // Convert sheet data to JSON
-        let excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-        // Auto-increment index
-        let newIndex = excelData.length;
-        let newEntry = [newIndex, lastName, firstName, phoneNumber, email, company, role];
-
-        // Append new entry
-        excelData.push(newEntry);
-
-        // Convert data back to worksheet
-        const newWorksheet = XLSX.utils.aoa_to_sheet(excelData);
-        workbook.Sheets[sheetName] = newWorksheet;
-
-        // Save updated Excel file
-        const updatedExcel = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        const blob = new Blob([updatedExcel], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-
-        // Create a download link
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "TCS_draft_excel.xlsx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        alert("Your response has been successfully added to the Excel file!");
-
-        // Clear form fields
-        document.getElementById("ms-form").reset();
+        if (result.message === "Success") {
+            alert("✅ Your response has been recorded in Google Sheets!");
+            document.getElementById("ms-form").reset();
+        } else if (result.message === "Limit Reached") {
+            alert("⚠️ The form has reached the maximum limit of 40 entries.");
+        } else {
+            alert("❌ Error submitting your response.");
+        }
     } catch (error) {
-        console.error("Error updating Excel file:", error);
-        alert("There was an error updating the Excel file.");
+        console.error("❌ Network error:", error);
+        alert("❌ Network error. Please check your connection and try again.");
     }
   });
+
 // custom code
 
 });
